@@ -1,0 +1,7 @@
+.idea
+.ipynb_checkpoints
+
+*.iml
+
+resources/*.txt
+resources/*.csv
