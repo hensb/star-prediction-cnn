@@ -1,6 +1,5 @@
+import dask.dataframe as dd
 import numpy as np
-import os
-import pandas as pd
 
 from google.cloud import storage
 from keras.layers import Dense, Input, GlobalMaxPooling1D
@@ -15,16 +14,11 @@ EMBEDDING_DIM = 100
 MAX_NB_WORDS = 20000
 MAX_SEQUENCE_LENGTH = 2048
 VALIDATION_SPLIT = 0.2
-BUCKET = 'amazon-dataset'
-DATA = 'Reviews.csv'
-
-client = storage.Client()
-bucket = client.get_bucket(BUCKET)
-blob_training = storage.Blob(DATA, bucket)
-content_training = blob_training.download_as_string()
+DATA_SOURCE = 'gs://amazon-dataset/Reviews.csv'
+EMBEDDING_FILE = 'glove.6B.100d.txt'
 
 # read texts
-df = pd.read_csv(content_training).set_index("Id")
+df = dd.read_csv(DATA_SOURCE).compute().set_index("Id")
 df = df.sample(100000)
 texts = df['Text'].tolist()
 
@@ -55,14 +49,16 @@ y_train = labels[:-nb_validation_samples]
 x_val = data[-nb_validation_samples:]
 y_val = labels[-nb_validation_samples:]
 
+client = storage.Client()
+bucket = client.get_bucket('amazon-dataset')
+blob = bucket.get_blob(EMBEDDING_FILE)
+
 embeddings_index = {}
-f = open(os.path.join(GLOVE_DIR, 'glove.6B.100d.txt'), mode='r', encoding="utf-8")
-for line in f:
-    values = line.split()
+for row in blob.download_as_string().splitlines():
+    values = row.split()
     word = values[0]
     coefs = np.asarray(values[1:], dtype='float32')
     embeddings_index[word] = coefs
-f.close()
 print('Found %s word vectors.' % len(embeddings_index))
 
 embedding_matrix = np.zeros((len(word_index) + 1, EMBEDDING_DIM))
