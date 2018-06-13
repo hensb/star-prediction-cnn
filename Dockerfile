@@ -3,7 +3,7 @@ MAINTAINER hendrik.schoeneberg@zuehlke.com
 
 RUN mkdir /workspace
 ADD resources/ /workspace
-ADD predict_star_rating.py /workspace
+ADD trainer/predict_star_rating.py /workspace
 
 WORKDIR /workspace
 

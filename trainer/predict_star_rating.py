@@ -2,6 +2,7 @@ import numpy as np
 import os
 import pandas as pd
 
+from google.cloud import storage
 from keras.layers import Dense, Input, GlobalMaxPooling1D
 from keras.layers import Conv1D, MaxPooling1D, Embedding, Flatten
 from keras.models import Model
@@ -9,14 +10,21 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 
-GLOVE_DIR = './resources'
+GLOVE_DIR = '../resources'
 EMBEDDING_DIM = 100
 MAX_NB_WORDS = 20000
 MAX_SEQUENCE_LENGTH = 2048
 VALIDATION_SPLIT = 0.2
+BUCKET = 'amazon-dataset'
+DATA = 'Reviews.csv'
+
+client = storage.Client()
+bucket = client.get_bucket(BUCKET)
+blob_training = storage.Blob(DATA, bucket)
+content_training = blob_training.download_as_string()
 
 # read texts
-df = pd.read_csv("resources/Reviews.csv").set_index("Id")
+df = pd.read_csv(content_training).set_index("Id")
 df = df.sample(100000)
 texts = df['Text'].tolist()
 
