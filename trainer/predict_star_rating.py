@@ -19,7 +19,7 @@ EMBEDDING_FILE = 'glove.6B.100d.txt'
 
 # read texts
 df = dd.read_csv(DATA_SOURCE).compute().set_index("Id")
-df = df.sample(100000)
+# df = df.sample(100000)
 texts = df['Text'].tolist()
 
 # tokenize input
@@ -94,4 +94,4 @@ model.compile(loss='categorical_crossentropy',
               metrics=['acc'])
 
 # happy learning!
-history = model.fit(x_train, y_train, validation_data=(x_val, y_val),epochs=2, batch_size=128)
+history = model.fit(x_train, y_train, validation_data=(x_val, y_val),epochs=20, batch_size=128)

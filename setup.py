@@ -1,7 +1,8 @@
 from setuptools import find_packages
 from setuptools import setup
 
-REQUIRED_PACKAGES = ['cloudpickle', 'dask[complete]', 'gcsfs', 'keras', 'numpy', 'pandas', 'toolz', 'google-cloud-storage']
+REQUIRED_PACKAGES = ['cloudpickle', 'dask[complete]', 'gcsfs', 'keras', 'numpy', 'pandas', 'requests>=2.18.0', 'toolz',
+                     'urllib3', 'google-cloud-storage==1.3.2']
 
 setup(
     name='trainer',
