@@ -1,8 +1,30 @@
 trainingInput:
-  pythonVersion: "3.5"
+  pythonVersion: '3.5'
   scaleTier: CUSTOM
   masterType: complex_model_m_gpu
   workerType: complex_model_m_gpu
   parameterServerType: large_model
-  workerCount: 5
+  workerCount: 4
   parameterServerCount: 3
+  hyperparameters:
+    goal: MAXIMIZE
+    hyperparameterMetricTag: metric1
+    maxTrials: 5
+    maxParallelTrials: 2
+    enableTrialEarlyStopping: True
+    params:
+      - parameterName: first-layer-size
+        type: INTEGER
+        minValue: 50
+        maxValue: 500
+        scaleType: UNIT_LINEAR_SCALE
+      - parameterName: num-layers
+        type: INTEGER
+        minValue: 1
+        maxValue: 15
+        scaleType: UNIT_LINEAR_SCALE
+      - parameterName: scale-factor
+        type: DOUBLE
+        minValue: 0.1
+        maxValue: 1.0
+        scaleType: UNIT_REVERSE_LOG_SCALE
